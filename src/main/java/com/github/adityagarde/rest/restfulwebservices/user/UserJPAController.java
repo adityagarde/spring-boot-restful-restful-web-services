@@ -41,11 +41,25 @@ public class UserJPAController {
         User newUser = userRepository.save(user);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                                             .path("/{id}")
-                                             .buildAndExpand(newUser.getId())
-                                             .toUri();
+                .path("/{id}")
+                .buildAndExpand(newUser.getId())
+                .toUri();
 
         return ResponseEntity.created(uri).build();
+    }
+
+    @PutMapping(path = "/jpa/users/{id}")
+    public ResponseEntity updateUserName(@PathVariable Integer id, @RequestParam(name = "newName") String newName) {
+        User myUser = userRepository.getById(id);
+        myUser.setName(newName);
+        userRepository.save(myUser);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(myUser.getId())
+                .toUri();
+
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(path = "/jpa/users/{id}")
